@@ -557,11 +557,11 @@ library(themis) # for smote
 my_recipe <- recipe(ACTION ~ ., data=at) %>%
   step_mutate_at(all_numeric_predictors(), fn = factor) %>%
   step_lencode_mixed(all_nominal_predictors(), outcome = vars(ACTION)) %>%
-  step_upsample()
+  step_downsample()
 
 my_mod_rf <- rand_forest(mtry = tune(),
                          min_n=tune(),
-                         trees=700) %>%
+                         trees=400) %>%
   set_engine("ranger") %>%
   set_mode("classification")
 
@@ -1026,7 +1026,7 @@ my_recipe <- recipe(ACTION ~ ., data=at) %>%
 
 my_mod_rf <- rand_forest(mtry = tune(),
                          min_n=tune(),
-                         trees=500) %>%
+                         trees=300) %>%
   set_engine("ranger") %>%
   set_mode("classification")
 
@@ -1043,7 +1043,7 @@ tuning_grid <- grid_regular(mtry(range = c(1,(ncol(at)-1))),
 
 ## Set up K-fold CV
 
-folds <- vfold_cv(at, v = 3, repeats=3)
+folds <- vfold_cv(at, v = 3, repeats=1)
 
 ## Find best tuning parameters
 
